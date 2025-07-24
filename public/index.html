@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>جستجوی پرواز</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css" />
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 50px;
+        }
+
+        .card {
+            max-width: 550px;
+            margin: auto;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        #loader {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+            جستجوی بلیت پرواز
+        </div>
+        <div class="card-body">
+            <form id="dateForm">
+                <div class="mb-3">
+                    <label for="origin" class="form-label">مبدأ</label>
+                    <select id="origin" name="origin" class="form-select" required>
+                        <option value="NJF">نجف (NJF)</option>
+                        <option value="IKA">فرودگاه امام (IKA)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="destination" class="form-label">مقصد</label>
+                    <select id="destination" name="destination" class="form-select" required>
+                        <option value="IKA">فرودگاه امام (IKA)</option>
+                        <option value="NJF">نجف (NJF)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="departureDate" class="form-label">تاریخ حرکت</label>
+                    <input type="text" id="departureDate" name="departureDate" class="form-control" required
+                        autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">بررسی پروازها</button>
+            </form>
+
+            <div id="loader">
+                <div class="spinner-border text-primary" role="status"></div>
+                <div class="mt-2">در حال بررسی پروازها...</div>
+            </div>
+
+            <div id="result" class="mt-4"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-date/dist/persian-date.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <script>$(document).ready(function () {
+            // فعال‌سازی تقویم شمسی
+            $('#departureDate').persianDatepicker({
+                format: 'YYYY-MM-DD',
+                initialValue: false
+            });
+
+            // تغییر خودکار مقصد
+            $('#origin').on('change', function () {
+                let origin = $(this).val();
+                let destination = (origin === 'IKA') ? 'NJF' : 'IKA';
+                $('#destination').val(destination);
+            });
+
+            // تبدیل اعداد فارسی به انگلیسی
+            function fixPersianNumbers(str) {
+                const persianNums = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+                const englishNums = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+                return str.replace(/[۰-۹]/g, function (d) {
+                    return englishNums[persianNums.indexOf(d)];
+                });
+            }
+
+            let eventSource = null;
+
+            $('#dateForm').on('submit', function (e) {
+                e.preventDefault();
+                if (eventSource) {
+                    eventSource.close(); // بستن درخواست قبلی
+                }
+                let rawDate = $('#departureDate').val();
+                let date = fixPersianNumbers(rawDate);
+                let origin = $('#origin').val();
+                let destination = $('#destination').val();
+
+                $('#result').html('');
+                $('#loader').show();
+
+                eventSource = new EventSource(`/stream?origin=${origin}&destination=${destination}&date=${date}`);
+
+                eventSource.onmessage = function (e) {
+                    if (e.data === '__END__') {
+                        $('#loader').hide();
+                        eventSource.close();
+                        return;
+                    }
+
+                    $('#result').append(e.data);
+                };
+
+                eventSource.onerror = function () {
+                    $('#loader').hide();
+                    $('#result').append('<div class="alert alert-warning">🔌 اتصال قطع شد.</div>');
+                    eventSource.close();
+                };
+            });
+        });
+    </script>
+</body>
+
+</html>

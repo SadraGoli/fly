@@ -1,0 +1,42 @@
+[
+  {
+    "airline": "Zagros Airlines",
+    "url": "https://nrs.zagrosairlines.com/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Yazd Air",
+    "url": "https://apps.yazdairways.com/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Qeshm Air",
+    "url": "https://apps.qeshm-air.com/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Varesh Airlines",
+    "url": "https://apps.vareshair.ir/ibe/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Meraj Air",
+    "url": "https://apps.meraj.aero/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Taban Air",
+    "url": "https://apps.taban.aero/ibe/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Kish Air",
+    "url": "https://apps.kishairlines.ir/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Aseman Air",
+    "url": "https://nrs.iaa.ir/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Air1 Air",
+    "url": "https://booking.air1air.com/arbaeen//Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  },
+  {
+    "airline": "Chabahar Air",
+    "url": "https://apps.chabaharairlines.com/arbaeen/Availability?origin=ORIGIN&destination=DEST&departureDate=DATE"
+  }
+]
